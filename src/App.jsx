@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import About from './components/About';
 import Contact from './components/Contact';
 import RestaurantMenu from './components/RestaurantMenu';
+import Footer from './components/Footer';
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
   const [NewResListTitle, setResListTitle] = useState([]);
   const [NewRestaurant, setRestaurant] = useState([]);
   const [NewRestaurantTitle, setRestaurantTitle] = useState([]);
+
 
 
   useEffect(() => {
@@ -70,6 +72,7 @@ const App = () => {
 
   return (
     <div className='box'>
+     
       <BrowserRouter>
         <Navbar />
         <FilterSearch clicked={clicked} selectBox={selectBox} change={change} />
@@ -80,6 +83,7 @@ const App = () => {
           <Route path="/restaurant/:resId" element={<RestaurantMenu />} />
           <Route path="*" element={<Error />} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </div>
 
