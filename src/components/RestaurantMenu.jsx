@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { CDN_Link, restaurantMenuLink } from "../utils/constant";
+import { useDispatch } from "react-redux";
+import { addItem } from "../redux/cartSlice";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
@@ -8,6 +10,12 @@ const RestaurantMenu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [expandedSections, setExpandedSections] = useState({});
+
+
+  const dispatch = useDispatch();
+  const HandleAddButton = (item) => {
+    dispatch(addItem(item));
+  }
 
   useEffect(() => {
     fetchRestaurants();
@@ -28,7 +36,7 @@ const RestaurantMenu = () => {
       cards.forEach(card => {
         card?.groupedCard?.cardGroupMap && Object.values(card.groupedCard.cardGroupMap).forEach(group => {
           group?.cards?.forEach(itemCard => {
-            if (itemCard?.card?.card?.itemCards){
+            if (itemCard?.card?.card?.itemCards) {
               allMenuItems.push({
                 ...itemCard.card.card.info,  // Access info directly
                 section: group.title
@@ -53,13 +61,9 @@ const RestaurantMenu = () => {
     }
   };
 
-  const openModal = (item) => {
-    setSelectedItem(item);
-  };
+  
 
-  const closeModal = () => {
-    setSelectedItem(null);
-  };
+  
 
   const toggleSection = (section) => {
     setExpandedSections({
@@ -121,35 +125,35 @@ const RestaurantMenu = () => {
           {expandedSections[section] && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-b-lg">
               {sections[section].map(item => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all cursor-pointer" onClick={() => openModal(item)}>
-                  <img src={CDN_Link + item.imageId} alt="" className="w-full h-48 object-cover" />
-                  <div className="p-4">
-                    <h2 className="text-lg font-semibold text-gray-900">{item.name}</h2>
-                    <p className="text-sm text-gray-600 mt-1 line-clamp-3">{item.description}</p>
-                    <p className="text-green-700 font-bold mt-1">Rs - {item.price / 100}</p>
+                <div
+                  key={item.id}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all cursor-pointer transform hover:scale-101"
+                  
+                >
+                  <img
+                    src={CDN_Link + item.imageId}
+                    alt={item.name}
+                    className="w-full h-56 object-cover"
+                  />
+                  <div className="p-5">
+                    <h2 className="text-xl font-semibold text-gray-900 truncate">{item.name}</h2>
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-3">{item.description}</p>
+                    <p className="text-green-700 font-bold mt-2">
+                      Rs {((item.price || item.defaultPrice || 0) / 100).toFixed(2)}
+                    </p>
+
+                    <button className="mt-4 w-full px-5 py-2 bg-orange-400 text-white rounded-lg hover:bg-orange-400 transition-all shadow-md"  onClick={() => {HandleAddButton(item)}}>
+                      Add to Cart
+                    </button>
                   </div>
                 </div>
+
               ))}
             </div>
           )}
         </div>
       ))}
 
-      {selectedItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
-            <img src={CDN_Link + selectedItem.imageId} alt="" className="w-full h-64 object-cover rounded-t-lg" />
-            <div className="p-4">
-              <h2 className="text-xl font-bold text-gray-900">{selectedItem.name}</h2>
-              <p className="text-gray-600 mt-2">{selectedItem.description}</p>
-              <p className="text-green-700 font-bold mt-2">Rs - {selectedItem.price / 100}</p>
-            </div>
-            <button onClick={closeModal} className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

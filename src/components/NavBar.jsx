@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const cartData = useSelector((store) => store.cart.items)
+  console.log(cartData);
+  
 
   const toggleLogin = () => setIsLoggedIn(!isLoggedIn);
   const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -21,7 +25,7 @@ const Navbar = () => {
         <Link to="/" className="text-gray-700 hover:text-orange-500 transition">Home</Link>
         <Link to="/about" className="text-gray-700 hover:text-orange-500 transition">About</Link>
         <Link to="/cart" className="text-gray-700 hover:text-orange-500 transition flex items-center">
-          <FaShoppingCart className="mr-1" /> Cart
+          <FaShoppingCart className="mr-1" /> Cart({cartData.length})
         </Link>
         <Link to="/contact" className="text-gray-700 hover:text-orange-500 transition">Contact</Link>
       </ul>
@@ -57,7 +61,7 @@ const Navbar = () => {
         <Link to="/" className="text-gray-700 hover:text-orange-500 transition" onClick={toggleMenu}>Home</Link>
         <Link to="/offers" className="text-gray-700 hover:text-orange-500 transition" onClick={toggleMenu}>Offers</Link>
         <Link to="/cart" className="text-gray-700 hover:text-orange-500 transition flex items-center" onClick={toggleMenu}>
-          <FaShoppingCart className="mr-1" /> Cart
+          <FaShoppingCart className="mr-1" /> Cart({cartData.length})
         </Link>
         <Link to="/contact" className="text-gray-700 hover:text-orange-500 transition" onClick={toggleMenu}>Contact</Link>
         <button
